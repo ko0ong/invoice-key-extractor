@@ -1,0 +1,25 @@
+# Task 3
+방금 출력해주신 요소들을 구조화된 데이터프레임으로 만드는 코드를 작성해야 합니다.
+
+데이터프레임은 header_df, inline_df 총 2개를 생성합니다.
+header_df의 열은 Invoice Number, Invoice Date, Sender Name, Invoice Amount, Currency Code로 구성되어야 합니다.
+inline_df의 열은 Product, Unit Quantity, Unit, Unit Price, HS Code, Total Amount로 구성되어야 합니다.
+
+주의사항 1. 
+Invoice Amount, Unit Price, Total Amount는 숫자이지만, 텍스트 값으로 데이터 프레임을 만들어야 해요.
+콤마(,)와 (.) 표시가 중요한 업무라서요.
+추출된 문자 그대로 입력해주세요.
+
+주의사항 2.
+HS Code는 텍스트로 입력되어야 합니다. 0000.00와 같이 숫자로 표현되지만, 텍스트로 표현되어야 합니다.
+반드시 6개의 숫자로 표현되어야 합니다. 
+(올바른 예시 : 0123.45, 잘못된 예시 : 123.45)
+
+주의사항 3.
+Invoice Date는 숫자가 아닌 텍스트, 문자열로 처리해주세요.
+형식은 "2012-01-01" 의 형식을 따라야합니다.
+
+주의사항 4.
+NaN의 경우 '-'로 표현해주세요.
+
+답변을 바로 코드로 사용할 것이기 때문에 오류가 나지 않도록 파이썬 코드만 출력해주세요!

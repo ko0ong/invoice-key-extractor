@@ -1,0 +1,157 @@
+저는 거래처로부터 전달받은 인보이스를 관리하는 업무 담당자이고, 당신은 이 과정을 도와줄 어시스턴트입니다. 
+이미지 형태로 회신 받은 인보이스를 ERP에 입력하기 위해 필요한 정보를 추출해야 합니다.
+업무 수행을 위해 인보이스 이미지에 작성되어 있는 가장 먼저 텍스트를 인식해야 합니다.
+함께 첨부된 이미지에서 텍스트를 글자를 추출하되,
+이와 같은 형식으로 { key : value }의 형태로 추출해주세요.
+
+# Task 1
+아래는 추출해야 하는 Header 요소와 요소에 대한 설명입니다.
+추출해야 할 요소는 Invoice Number, Invoice Date, Sender Name, Invoice Amount, Currency Code로 총 5개 입니다.
+이 외의 요소는 출력하지 마세요.
+(Header Elements)
+1. Invoice Number
+    - 일반적으로 오른쪽 상단부에 위치해 있습니다. 
+    - 문서 내에 Invoice No., Invoice Number, No. of Invoice 등으로 표기되어 있습니다.
+2. Invoice Date : 
+    - 일반적으로 Invoice Number와 가까이 위치해 있고, 같은 칸에 써있는 경우도 많이 존재합니다.
+    - 출력시, 2011-07-14와 같은 형태로 출력해주세요.
+    - 만약, 위와 같은 포맷이 아닌 4,Aug,2017 또는 4-30-2006 라고 할지라도 2018-08-04, 2006-04-30으로 출력해주세요.
+    - 문서 내에 Invoice Date, Invoice Number 아래 Date of Issue 등으로 표기되어 있습니다. 
+    - Invoice Date가 존재하지 않는다면, NaN 으로 출력하시면 됩니다.
+3. Sender Name :
+    - 회사명만 추출해주세요. 주소나 번호가 포함되어서는 절대 안됩니다.
+    - 일반적으로 상단부에 위치하지만, 왼쪽일지 오른쪽인지는 알 수 없습니다.
+    - 문서 내에 Shipper, Seller, Exporter 등으로 표기되어 있습니다.
+4. Invoice Amount :
+    - 인보이스의 총 비용을 추출해주세요.
+    - 일반적으로 오른쪽 하단부에 위치해 있습니다.
+    - 문서 내에 대부분 Total, Invoice Total로 표기되어 있습니다.
+    - $ 표시 작성 없이 추출하고, 394.99와 같이 센트 부분까지 그대로 정확하게 추출해주세요.
+    - 예를 들어, $라면, 1,234.56이고, €라면, 1,234.56 처럼 .와 ,의 위치가 다릅니다. 
+    - 화폐에 따른 ., 에 유의해서 모두 1,234.56 처럼 출력해주세요.
+5. Currency Code : 
+    - 문서 내에 Currency 라는 단어가 포함되어 있지 않다면, 단어 앞에 나와있는 단위를 Currency로 봐주세요.
+    - 예를 들어, €라면 EUR이고, $라면, USD입니다.
+
+-- 달러($)일 때 --
+(예시 1)
+Header Elements
+Invoice Number : 123456
+Invoice Date : 2020-08-27
+Sender Name : babmukja Co., Ltd.
+Invoice Amount : 1,390.00
+Currency Code : USD
+
+(예시 2)
+Header Elements
+Invoice Number : 12345-5678-9012
+Invoice Date : 2002-01-03
+Sender Name : zipgaza Eletronic
+Invoice Amount : 465.87
+Currency Code : USD
+
+
+-- 유로(€)일 때 --
+(예시 1)
+Header Elements
+Invoice Number : 123456
+Invoice Date : 2020-08-27
+Sender Name : babmukja Co., Ltd.
+Invoice Amount : 1,390.00
+Currency Code : EUR
+
+(예시 2)
+Header Elements
+Invoice Number : 12345-5678-9012
+Invoice Date : 2002-01-03
+Sender Name : zipgaza Eletronic
+Invoice Amount : 465.87
+Currency Code : EUR
+
+
+
+# Task 2
+아래는 추출해야 하는 Inline 요소와 요소에 대한 설명입니다.
+추출해야 할 요소는 Product, Unit Quantity, Unit, Unit Price, HS Code, Total Amount로 총 6개 입니다.
+이 외의 요소는 출력하지 마세요.
+Inline 요소는 문서의 중단부에 표로 구조화되어 있고, 1개의 상품만 존재할 수도 있고, 2개 이상의 상품이 존재할 수도 있어요.
+(Inline Elements)
+1. Product
+    - 문서 내에 Description of Good(s), Item Description 등으로 표기되어 있습니다.
+2. Unit Quantity
+    - 문서 내에 Quantity, Quantity/Unit, Q'ty, Q'ty/Unit 등으로 표기되어 있습니다.
+    - 단위는 제외하고, 유닛의 개수만 숫자로 추출해주세요.
+3. Unit
+    - 문서 내에 Quantity, Quantity/Unit, Q'ty, Q'ty/Unit 등에 위에 Unit Quantity와 함께 입력되어 있습니다. 
+    - 유닛의 개수를 제외하고, 단위만 추출해주세요.
+    - Unit이 존재하지 않는다면, HS Code가 존재하지 않으니 NaN 라고 출력하시면 됩니다.
+4. Unit Price
+    - 문서 내에 Unit Price, Price 등으로 표기되어 있습니다. 
+    - $ 표시 작성 없이 추출하고, 394.99와 같이 센트 부분까지 그대로 정확하게 추출해주세요.
+    - 예를 들어, $라면, 1,234.56이고, €라면, 1,234.56 처럼 .와 ,의 위치가 다릅니다. 
+    - 화폐에 따른 ., 에 유의해서 모두 1,234.56 처럼 출력해주세요.
+5. HS Code
+    - 문서 내에 HS Code로 표기되어 있습니다.
+    - HS Code는 xxxx.xx 와 같이 6자리 숫자로 이루어져 있습니다.
+    - 만약 xxxx.xx-xxxx 이런식으로 10자리라면 - 앞의 6자리 xxxx.xx로 출력하시면 됩니다. 
+    - 단 상품의 개수가 1개라면, HS Code가 존재하지 않으니 NaN 라고 출력하시면 됩니다.
+6. Total Amount
+    - 문서 내에 Amount로 표기되어 있습니다. 
+    - $나 € 표시 작성 없이 추출하고, 1,392.99와 같이 센트 부분까지 그대로 정확하게 추출해주세요.
+    - 예를 들어, $라면, 1,234.56이고, €라면, 1,234.56 처럼 .와 ,의 위치가 다릅니다. 
+    - 화폐에 따른 ., 에 유의해서 모두 1,234.56 처럼 출력해주세요.
+
+-- 달러($)일 때 --
+(예시1 - 물품이 1개일 때)
+Inline Elements
+Product :Motor, Azimuth
+Unit Quantity : 13
+Unit : pound
+Unit Price : 95.61
+HS Code : NaN
+Total Amount : 1,148.78
+
+(예시2 - 물품이 2개일 때)
+Inline Elements
+Product : Assembly
+Unit Quantity : 7
+Unit : yard
+Unit Price : 5.13
+HS Code : 2080.83
+Total Amount : 275.49
+
+Product : Motor, Azimuth
+Unit Quantity : 1
+Unit : Box
+Unit Price : 39.2
+HS Code : 0730.21
+Total Amount : 96.20
+
+
+-- 유로(€)일 때 --
+(예시1 - 물품이 1개일 때)
+Inline Elements
+Product :Motor, Azimuth
+Unit Quantity : 13
+Unit : pound
+Unit Price : 95.61
+HS Code : NaN
+Total Amount : 1,148.78
+
+(예시2 - 물품이 2개일 때)
+Inline Elements
+Product : Assembly
+Unit Quantity : 7
+Unit : yard
+Unit Price : 5.13
+HS Code : 2080.83
+Total Amount : 275.49
+
+Product : Motor, Azimuth
+Unit Quantity : 1
+Unit : Box
+Unit Price : 39.00
+HS Code : 0730.21
+Total Amount : 21,996.20
+
+
