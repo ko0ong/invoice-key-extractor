@@ -19,32 +19,6 @@ prompt = load_prompt(prompt_file_path)
 prompt_file_path2 = "prompt2.txt"
 prompt2 = load_prompt(prompt_file_path2)
 
-client = openai.OpenAI()
-
-def extract_elements(img):
-    messages_list = [
-        {"role": "system", "content": prompt},
-        {"role": "user", "content": [
-            {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{img}"}}
-        ]}
-    ]
-    response = client.chat.completions.create(
-        model='gpt-4o-2024-11-20',
-        messages=messages_list
-    )
-    return response.choices[0].message.content
-
-def structured_elements(first_response):   
-    messages_list = [
-        {"role": "system", "content": prompt2},
-        {"role": "user", "content": first_response}        
-    ]
-    response = client.chat.completions.create(
-        model='gpt-4o-2024-11-20',
-        messages=messages_list
-    )
-    return response.choices[0].message.content
-
 st.set_page_config(page_title="Invoice Key Extractor", page_icon="📝", layout="wide")
 st.markdown(
     """
@@ -124,6 +98,31 @@ def main():
             return
         os.environ["OPENAI_API_KEY"] = my_api
         client = openai.OpenAI()
+
+        def extract_elements(img):
+            messages_list = [
+                {"role": "system", "content": prompt},
+                {"role": "user", "content": [
+                    {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{img}"}}
+                ]}
+            ]
+            response = client.chat.completions.create(
+                model='gpt-4o-2024-11-20',
+                messages=messages_list
+            )
+            return response.choices[0].message.content
+
+        def structured_elements(first_response):   
+            messages_list = [
+                {"role": "system", "content": prompt2},
+                {"role": "user", "content": first_response}        
+            ]
+            response = client.chat.completions.create(
+                model='gpt-4o-2024-11-20',
+                messages=messages_list
+            )
+            return response.choices[0].message.content
+
     else:
         st.info("왼쪽에 있는 사이드 바에 API Key를 입력하고 Enter를 눌러주세요.")
         return
