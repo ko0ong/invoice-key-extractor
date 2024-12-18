@@ -1,25 +1,31 @@
+아래는 인보이스 데이터로부터 추출한 정보를 바탕으로 두 개의 데이터프레임(header_df, inline_df)을 생성하는 파이썬 코드 작성 지침입니다.
+본 지침을 프롬프트로 사용하여 코드를 작성할 때, 지시사항을 엄수해주세요.
+
 # Task 3
-방금 출력해주신 요소들을 구조화된 데이터프레임으로 만드는 코드를 작성해야 합니다.
 
-데이터프레임은 header_df, inline_df 총 2개를 생성합니다.
-header_df의 열은 Invoice Number, Invoice Date, Sender Name, Invoice Amount, Currency Code로 구성되어야 합니다.
-inline_df의 열은 Product, Unit Quantity, Unit, Unit Price, HS Code, Total Amount로 구성되어야 합니다.
+## 지시사항
+	•	추출된 Header 정보로 구성한 header_df를 만드세요.
+	•	열(Columns): Invoice Number, Invoice Date, Sender Name, Invoice Amount, Currency Code
+	•	추출된 Inline 정보로 구성한 inline_df를 만드세요.
+	•	열(Columns): Product, Unit Quantity, Unit, Unit Price, HS Code, Total Amount
 
-주의사항 1. 
-Invoice Amount, Unit Price, Total Amount는 숫자이지만, 텍스트 값으로 데이터 프레임을 만들어야 해요.
-콤마(,)와 (.) 표시가 중요한 업무라서요.
-추출된 문자 그대로 입력해주세요.
+## 주의사항
+1.	Invoice Amount, Unit Price, Total Amount
+	•	숫자 형태지만, 추출한 값을 그대로 문자열로 처리해야 합니다.
+	•	콤마(,)와 소수점(.) 등의 특수문자가 포함된 형식을 변경하지 말고 그대로 입력하세요.
+2.	HS Code
+	•	텍스트 형태로 처리해야 합니다.
+	•	xxxx.xx 형태로 정확히 6자리 숫자여야 합니다.
+	•	예) 올바른 예시: 0123.45 / 잘못된 예시: 123.45
+3.	Invoice Date
+	•	문자열로 처리해주세요.
+	•	YYYY-MM-DD 형식을 준수하세요.
+	•	예) “2012-01-01”
+4.	NaN의 경우 ‘-’ 로 표기
+	•	어떤 값이라도 NaN이라면 ’-’로 변환해서 입력해주세요.
 
-주의사항 2.
-HS Code는 텍스트로 입력되어야 합니다. 0000.00와 같이 숫자로 표현되지만, 텍스트로 표현되어야 합니다.
-반드시 6개의 숫자로 표현되어야 합니다. 
-(올바른 예시 : 0123.45, 잘못된 예시 : 123.45)
-
-주의사항 3.
-Invoice Date는 숫자가 아닌 텍스트, 문자열로 처리해주세요.
-형식은 "2012-01-01" 의 형식을 따라야합니다.
-
-주의사항 4.
-NaN의 경우 '-'로 표현해주세요.
-
-답변을 바로 코드로 사용할 것이기 때문에 오류가 나지 않도록 파이썬 코드만 출력해주세요!
+## 최종적으로 아래와 같이 코드만 작성하세요.
+	•	header_df와 inline_df를 생성하는 파이썬 코드
+	•	모든 값은 문자열 형태로 입력할 것
+	•	위에 명시한 주의사항을 모두 반영할 것
+	•	프롬프트에 사용할 예정이므로, 오류 없이 동작하는 코드 형태여야 합니다.
