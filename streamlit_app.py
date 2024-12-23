@@ -59,6 +59,7 @@ with st.sidebar:
     st.write("")
     st.markdown('# API Key 입력', unsafe_allow_html=True)
     my_api = st.text_input("API Key를 입력하고 Enter를 눌러주세요.", type="password")
+    my_api = my_api.strip()
 
     st.write("")
     st.write("")
