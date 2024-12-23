@@ -151,7 +151,7 @@ def main():
                         with st.spinner('요소를 추출하고 있습니다. 잠시만 기다려주세요...'):
                             img = file_to_base64_image(img_file)
                             first_response = extract_elements(img)
-                            if "인보이스 데이터 관련 정보가 제공되지 않다면," in first_response:
+                            if "정보가 제공되지 않다면," in first_response:
                                 st.error("손상된 파일을 입력하였습니다. 입력한 이미지 파일을 확인해주세요.")
                                 st.stop()  
 
