@@ -95,9 +95,23 @@ def main():
     if my_api:
         if not my_api.startswith("sk-"):
             st.error("API Key는 'sk-'로 시작해야 합니다. 올바른 API Key를 입력해주세요.")
-            return
+            st.stop()
+
         os.environ["OPENAI_API_KEY"] = my_api
+        openai.api_key = my_api
+
+        try:
+            openai.Model.list()  
+        except AuthenticationError:
+            st.error("존재하지 않는(유효하지 않은) API Key 입니다. 다시 확인해주세요.")
+            st.stop() 
+        except Exception as e:
+            st.error(f"API Key 확인 중 오류가 발생했습니다: {e}")
+            st.stop()
+        
         client = openai.OpenAI()
+        return client
+
 
         def extract_elements(img):
             messages_list = [
@@ -151,6 +165,10 @@ def main():
                         with st.spinner('요소를 추출하고 있습니다. 잠시만 기다려주세요...'):
                             img = file_to_base64_image(img_file)
                             first_response = extract_elements(img)
+                            if "인보이스 데이터 관련 정보가 제공되지 않다면," in first_response:
+                                st.error("손상된 파일을 입력하였습니다. 입력한 이미지 파일을 확인해주세요.")
+                                st.stop()  
+
                             structured_code = structured_elements(first_response)
 
                             st.session_state[f'gpt_response_{i}'] = structured_code
