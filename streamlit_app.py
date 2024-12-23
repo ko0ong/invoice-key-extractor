@@ -3,6 +3,7 @@ from pyparsing import empty
 from datetime import datetime
 
 import openai
+from openai.error import AuthenticationError
 import io
 import fitz
 import os
@@ -104,14 +105,11 @@ def main():
             openai.Model.list()  
         except AuthenticationError:
             st.error("존재하지 않는(유효하지 않은) API Key 입니다. 다시 확인해주세요.")
-            st.stop() 
         except Exception as e:
             st.error(f"API Key 확인 중 오류가 발생했습니다: {e}")
-            st.stop()
         
         client = openai.OpenAI()
         return client
-
 
         def extract_elements(img):
             messages_list = [
