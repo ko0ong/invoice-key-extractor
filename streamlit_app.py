@@ -72,17 +72,7 @@ with st.sidebar:
     5. 개별 문서도 다운로드 가능합니다.
     6. 첫 번째 탭으로 돌아와서<br>"Update"를 누른 후에 다운로드 하세요.\n
     ''', unsafe_allow_html=True)
-
-    st.write("")
-    st.write("")
-    st.write("")
-    st.markdown('# 문의사항', unsafe_allow_html=True)
-    st.markdown('''        
-        <p style="text-align:left; font-size:17px;">- 서비스 오류 : &nbsp;&nbsp;010-3821-7500 &nbsp;&nbsp;이자경</p>
-    ''', unsafe_allow_html=True)
-    st.markdown('''
-        <p style="text-align:left; font-size:17px;">- 설문지 문의 : &nbsp;&nbsp;010-3467-6306 &nbsp;&nbsp;오정은<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp010-5352-5391 &nbsp;&nbsp;이수진</p>
-    ''', unsafe_allow_html=True)    
+  
 
 def main():
     st.title("📝 Commercial Invoice Key Extractor")
@@ -228,7 +218,7 @@ def main():
                                     if st.button('Save Changes', key=f'save_button_{i}'):
                                         st.session_state[f'edit_mode_{i}'] = False  
                                         st.session_state[f'save_mode_{i}'] = True
-                                        st.session_state['data_changed'] = True  # 변경사항 있음
+                                        st.session_state['data_changed'] = True
                                         st.success("Changes saved successfully!")
                                 
 
@@ -259,7 +249,6 @@ def main():
                                             st.session_state[f'next_mode_{i}'] = True
                                             st.session_state[f'edit_mode_{i}'] = False          
 
-                        # Download 모드 (개별 문서)
                         if st.session_state[f'next_mode_{i}'] and not st.session_state[f'edit_mode_{i}']:
                             updated_header_df = st.session_state[f'updated_header_df_{i}']
                             updated_inline_df = st.session_state[f'updated_inline_df_{i}']
