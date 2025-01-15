@@ -1,51 +1,56 @@
-아래는 인보이스 이미지로부터 필요한 정보를 추출하는 작업에 대한 가이드입니다.
-해당 지시사항을 참고하여 인보이스 이미지에 기록된 텍스트를 인식하고, 지정된 형식대로 결과를 출력해주세요.
+Below are the guidelines for extracting required information from an invoice image.
+Follow these instructions to recognize the text written on the invoice image and output the results in the specified format.
 
-# 출력 형식 예시
+# Output Format Example
 
-Header Elements  
-Invoice Number : <값>  
-Invoice Date : <값>  
-Sender Name : <값>  
-Invoice Amount : <값>  
-Currency Code : <값>  
-  
-Inline Elements  
-Product : <값>  
-Unit Quantity : <값>  
-Unit : <값>  
-Unit Price : <값>  
-HS Code : <값>  
-Total Amount : <값>  
+Header Elements
+Invoice Number : <value>
+Invoice Date : <value>
+Sender Name : <value>
+Invoice Amount : <value>
+Currency Code : <value>
 
-(만약 상품이 2개 이상이라면 Inline Elements 구역에 각 상품 정보를 연속해서 기재)
+Inline Elements
+Product : <value>
+Unit Quantity : <value>
+Unit : <value>
+Unit Price : <value>
+HS Code : <value>
+Total Amount : <value>
+
+(If there are multiple products, list each product’s details sequentially under Inline Elements)
 
 # Task 1 (Header Elements)
 
-## 추출 대상 (5개 요소)
+## Required Elements (5 total)
 1.	Invoice Number
-	•	문서 상단부, 보통 우측 상단에 위치
-	•	“Invoice No.”, “Invoice Number”, “No. of Invoice” 등으로 표기
+	•	Generally located at the top part of the document, often on the right side.
+	•	May appear as “Invoice No.”, “Invoice Number”, or “No. of Invoice”.
 2.	Invoice Date
-	•	Invoice Number 근처에 위치
-	•	“Invoice Date”, “Date of Issue” 등으로 표기
-	•	날짜 포맷: YYYY-MM-DD
-	•	예: 4,Aug,2017 → 2017-08-04, 4-30-2006 → 2006-04-30
-	•	인식 불가 시 NaN
+	•	Usually located near the Invoice Number.
+	•	May appear as “Invoice Date” or “Date of Issue”.
+	•	Format the date as YYYY-MM-DD.
+	•	For example:
+	•	4,Aug,2017 → 2017-08-04
+	•	4-30-2006 → 2006-04-30
+	•	Be careful not to confuse it with “Date of Departure” or “L/C Date”.
+	•	If only “Date of Departure” or “L/C Date” exists without “Invoice Date” or “Date of Issue”, you must follow output NaN, please.
+	•	If not found, output NaN.
 3.	Sender Name
-	•	상단부에 위치 (좌측 또는 우측)
-	•	“Shipper”, “Seller”, “Exporter” 등으로 표기
-	•	회사명만 추출 (주소, 번호 등 제외)
+	•	Located at the top (left or right side).
+	•	May appear as “Shipper”, “Seller”, “Exporter” and so on.
+	•	Extract only the company name (exclude address, phone numbers, etc.).
 4.	Invoice Amount
-	•	인보이스 총액
-	•	문서 하단부, “Total” 또는 “Invoice Total”로 표기
-	•	통화 기호($ 또는 €) 제외하고 숫자만 추출
-	•	소수점은 그대로 유지, 형식은 1,234.56 형태
+	•	Total amount of the invoice.
+	•	Usually located at the bottom of the document, indicated by “Total” or “Invoice Total”.
+	•	Exclude the currency symbol ($ or €) and extract only the numeric value.
+	•	Retain any decimals and format as 1,234.56.
 5.	Currency Code
-	•	문서 내 “Currency”라는 단어가 없을 경우 금액 앞 기호로 판단
-	•	$ → USD / € → EUR
+	•	If the word “Currency” is not mentioned, determine the currency by the symbol before the amount:
+	•	$ → USD
+	•	€ → EUR
 
-달러($) 예시
+Dollar ($) Example
 
 Header Elements
 Invoice Number : 123456
@@ -54,7 +59,7 @@ Sender Name : babmukja Co., Ltd.
 Invoice Amount : 1,390.00
 Currency Code : USD
 
-유로(€) 예시
+Euro (€) Example
 
 Header Elements
 Invoice Number : 123456
@@ -65,30 +70,30 @@ Currency Code : EUR
 
 # Task 2 (Inline Elements)
 
-## 추출 대상 (상품별 6개 요소)
+## Required Elements (6 per product)
 1.	Product
-	•	“Description of Good(s)”, “Item Description” 등으로 표기
+	•	Appears as “Description of Good(s)”, “Item Description”, etc.
 2.	Unit Quantity
-	•	“Quantity”, “Quantity/Unit”, “Q’ty”, “Q’ty/Unit” 등으로 표기
-	•	숫자만 추출(단위 제외)
+	•	Appears as “Quantity”, “Quantity/Unit”, “Q’ty”, or “Q’ty/Unit”.
+	•	Extract only the numeric quantity (exclude the unit).
 3.	Unit
-	•	Unit Quantity와 함께 표기된 단위 추출
-	•	Unit이 없으면 HS Code도 없으므로 두 값 모두 NaN
+	•	Extract the unit that appears alongside the quantity.
+	•	If the unit does not exist, then HS Code also does not exist, so both are NaN.
 4.	Unit Price
-	•	“Unit Price”, “Price” 등으로 표기
-	•	$ 또는 € 제외, 숫자만 추출
-	•	형식: 1,234.56
+	•	Appears as “Unit Price” or “Price”.
+	•	Exclude currency symbols ($ or €), extract only the numeric value.
+	•	Format the number as 1,234.56.
 5.	HS Code
-	•	“HS Code” 표기
-	•	기본 형식: xxxx.xx (6자리)
-	•	xxxx.xx-xxxx 형태일 경우, xxxx.xx만 추출
-	•	상품이 1개일 경우 HS Code는 NaN
+	•	Appears as “HS Code”.
+	•	Format is xxxx.xx (6 digits in total).
+	•	If the format is xxxx.xx-xxxx, extract only xxxx.xx.
+	•	If there is only one product, HS Code is NaN.
 6.	Total Amount
-	•	“Amount”로 표기
-	•	$ 또는 € 제외
-	•	형식: 1,234.56
+	•	Appears as “Amount”.
+	•	Exclude currency symbols ($ or €).
+	•	Format as 1,234.56.
 
-달러($), 물품 1개 예시
+Dollar ($), single product example
 
 Inline Elements
 Product : Motor, Azimuth
@@ -98,7 +103,7 @@ Unit Price : 95.61
 HS Code : NaN
 Total Amount : 1,148.78
 
-달러($), 물품 2개 예시
+Dollar ($), multiple products example
 
 Inline Elements
 Product : Assembly
@@ -115,7 +120,7 @@ Unit Price : 39.20
 HS Code : 0730.21
 Total Amount : 96.20
 
-유로(€), 물품 1개 예시
+Euro (€), single product example
 
 Inline Elements
 Product : Motor, Azimuth
@@ -125,7 +130,7 @@ Unit Price : 95.61
 HS Code : NaN
 Total Amount : 1,148.78
 
-유로(€), 물품 2개 예시
+Euro (€), multiple products example
 
 Inline Elements
 Product : Assembly
@@ -142,7 +147,7 @@ Unit Price : 39.00
 HS Code : 0730.21
 Total Amount : 21,996.20
 
-## 주의사항
-	•	지정한 5개 Header 요소, Inline 요소 6개만 추출
-	•	날짜/금액 형식 및 단위 제거 규칙 엄수
-	•	상품이 여러 개일 경우 Inline Elements 내에 순서대로 나열
+# Important Notes
+	•	Only extract the specified 5 Header elements and 6 Inline elements.
+	•	Adhere strictly to the formatting rules for dates, amounts, and units.
+	•	If multiple products are listed, present them sequentially under Inline Elements.
