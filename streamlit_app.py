@@ -83,40 +83,67 @@ def main():
     ##### 상업송장 문서 이미지를 입력하시면, 값이 구조화된 엑셀 템플릿을 다운로드할 수 있습니다.
     ''')
 
-    if my_api:
-        if not my_api.startswith("sk-"):
-            st.error("API Key는 'sk-'로 시작해야 합니다. 올바른 API Key를 입력해주세요.")
-            return
-        os.environ["OPENAI_API_KEY"] = my_api
-        client = openai.OpenAI()
+    os.environ["OPENAI_API_KEY"] = st.secrets['OPENAI_API_KEY']
+    client = openai.OpenAI()
 
-        def extract_elements(img):
-            messages_list = [
-                {"role": "system", "content": prompt},
-                {"role": "user", "content": [
-                    {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{img}"}}
-                ]}
-            ]
-            response = client.chat.completions.create(
-                model='gpt-4o-2024-11-20',
-                messages=messages_list
-            )
-            return response.choices[0].message.content
+    def extract_elements(img):
+        messages_list = [
+            {"role": "system", "content": prompt},
+            {"role": "user", "content": [
+                {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{img}"}}
+            ]}
+        ]
+        response = client.chat.completions.create(
+            model='gpt-4o-2024-11-20',
+            messages=messages_list
+        )
+        return response.choices[0].message.content
 
-        def structured_elements(first_response):   
-            messages_list = [
-                {"role": "system", "content": prompt2},
-                {"role": "user", "content": first_response}        
-            ]
-            response = client.chat.completions.create(
-                model='gpt-4o-2024-11-20',
-                messages=messages_list
-            )
-            return response.choices[0].message.content
+    def structured_elements(first_response):   
+        messages_list = [
+            {"role": "system", "content": prompt2},
+            {"role": "user", "content": first_response}        
+        ]
+        response = client.chat.completions.create(
+            model='gpt-4o-2024-11-20',
+            messages=messages_list
+        )
+        return response.choices[0].message.content
 
-    else:
-        st.info("왼쪽에 있는 사이드 바에 API Key를 입력하고 Enter를 눌러주세요.")
-        return
+    # if my_api:
+    #     if not my_api.startswith("sk-"):
+    #         st.error("API Key는 'sk-'로 시작해야 합니다. 올바른 API Key를 입력해주세요.")
+    #         return
+    #     os.environ["OPENAI_API_KEY"] = st.secrets['OPENAI_API_KEY']
+    #     client = openai.OpenAI()
+
+    #     def extract_elements(img):
+    #         messages_list = [
+    #             {"role": "system", "content": prompt},
+    #             {"role": "user", "content": [
+    #                 {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{img}"}}
+    #             ]}
+    #         ]
+    #         response = client.chat.completions.create(
+    #             model='gpt-4o-2024-11-20',
+    #             messages=messages_list
+    #         )
+    #         return response.choices[0].message.content
+
+    #     def structured_elements(first_response):   
+    #         messages_list = [
+    #             {"role": "system", "content": prompt2},
+    #             {"role": "user", "content": first_response}        
+    #         ]
+    #         response = client.chat.completions.create(
+    #             model='gpt-4o-2024-11-20',
+    #             messages=messages_list
+    #         )
+    #         return response.choices[0].message.content
+
+    # else:
+    #     st.info("왼쪽에 있는 사이드 바에 API Key를 입력하고 Enter를 눌러주세요.")
+    #     return
 
     st.markdown("<hr style='border: 1.5px solid #4d4d4d; margin-top: 10px; margin-bottom: 50px;'>", unsafe_allow_html=True)
     st.markdown('##### 상업송장 문서 이미지를 업로드 해주세요.')
