@@ -322,10 +322,10 @@ def main():
                                 all(i is not None for i in st.session_state['all_inlines']))
 
                 if all_processed:
-                    if st.session_state['data_changed']:
-                        st.warning("수정된 사항이 있습니다. 업데이트 하시겠습니까?")
-                        if st.button("Update"):
-                            st.session_state['data_changed'] = False
+                    # if st.session_state['data_changed']:
+                    #     st.warning("수정된 사항이 있습니다. 업데이트 하시겠습니까?")
+                    #     if st.button("Update"):
+                    #         st.session_state['data_changed'] = False
 
                     merged_all = []
                     for hdf, idf in zip(st.session_state['all_headers'], st.session_state['all_inlines']):
